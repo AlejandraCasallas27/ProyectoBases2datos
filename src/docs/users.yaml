@@ -1,0 +1,118 @@
+paths:
+  /api/v1/users:
+    post:
+      tags:
+      - Users
+      summary: Register a new pet owner
+      operationId: registerOwner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - fullName
+              - email
+              - password
+              properties:
+                fullName:
+                  type: string
+                  example: Maria Lopez
+                email:
+                  type: string
+                  format: email
+                  example: maria@example.com
+                password:
+                  type: string
+                  format: password
+                  example: DemoPassword123
+      responses:
+        '201':
+          description: Owner registered successfully
+        '400':
+          description: Invalid registration data
+        '409':
+          description: Email already registered
+        '500':
+          description: Internal server error
+    get:
+      tags:
+      - Users
+      summary: Search registered users
+      operationId: searchUsers
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        example: laura
+      responses:
+        '200':
+          description: Users retrieved successfully
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '500':
+          description: Internal server error
+  /api/v1/users/me:
+    get:
+      tags:
+      - Users
+      summary: Get authenticated user profile
+      operationId: getMyProfile
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved
+        '401':
+          description: Authentication required
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+  /api/v1/users/{userId}/status:
+    patch:
+      tags:
+      - Users
+      summary: Activate or deactivate a user
+      operationId: updateUserStatus
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - isActive
+              properties:
+                isActive:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: User status updated successfully
+        '400':
+          description: Invalid status information
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error

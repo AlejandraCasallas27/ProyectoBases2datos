@@ -1,0 +1,28 @@
+
+paths:
+  /api/v1/health:
+    get:
+      tags:
+        - Health
+      summary: Check API health
+      operationId: checkHealth
+      responses:
+        '200':
+          description: API is running successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  application:
+                    type: string
+                    example: VetCare API
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

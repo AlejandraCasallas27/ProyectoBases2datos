@@ -1,0 +1,52 @@
+paths:
+  /api/v1/sessions:
+    post:
+      tags:
+        - Sessions
+      summary: Authenticate user
+      description: Returns a JWT access token.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: laura.vetcare@example.com
+                password:
+                  type: string
+                  format: password
+                  example: VetCare123
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        type: object
+                        additionalProperties: true
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid credentials
+        "403":
+          description: Inactive account
+        "500":
+          description: Internal server error

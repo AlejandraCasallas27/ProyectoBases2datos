@@ -1,0 +1,188 @@
+
+paths:
+  /api/v1/services:
+    get:
+      tags:
+        - Services
+      summary: List active veterinary services
+      operationId: listActiveServices
+      responses:
+        '200':
+          description: Active services retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '500':
+          description: Internal server error
+
+    post:
+      tags:
+        - Services
+      summary: Create a veterinary service
+      operationId: createService
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - veterinarianName
+                - durationMinutes
+                - price
+              properties:
+                name:
+                  type: string
+                  example: Preventive Consultation
+                description:
+                  type: string
+                  example: General veterinary examination
+                veterinarianName:
+                  type: string
+                  example: Dr Ana Gomez
+                durationMinutes:
+                  type: integer
+                  example: 30
+                price:
+                  type: number
+                  example: 75000
+      responses:
+        '201':
+          description: Service created successfully
+        '400':
+          description: Invalid service information
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '500':
+          description: Internal server error
+
+  /api/v1/services/admin:
+    get:
+      tags:
+        - Services
+      summary: List all services for administrators
+      operationId: listAdminServices
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Services retrieved successfully
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '500':
+          description: Internal server error
+
+  /api/v1/services/{serviceId}:
+    get:
+      tags:
+        - Services
+      summary: Get a veterinary service
+      operationId: getService
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        '200':
+          description: Service retrieved successfully
+        '400':
+          description: Invalid service identifier
+        '404':
+          description: Service not found
+        '500':
+          description: Internal server error
+
+    put:
+      tags:
+        - Services
+      summary: Update a veterinary service
+      operationId: updateService
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                veterinarianName:
+                  type: string
+                durationMinutes:
+                  type: integer
+                price:
+                  type: number
+                isActive:
+                  type: boolean
+              example:
+                name: Preventive Consultation
+                description: General veterinary examination
+                veterinarianName: Dr Ana Gomez
+                durationMinutes: 30
+                price: 75000
+                isActive: true
+      responses:
+        '200':
+          description: Service updated successfully
+        '400':
+          description: Invalid service information
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '404':
+          description: Service not found
+        '500':
+          description: Internal server error
+
+  /api/v1/services/{serviceId}/deactivation:
+    patch:
+      tags:
+        - Services
+      summary: Deactivate a veterinary service
+      operationId: deactivateService
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        '200':
+          description: Service deactivated successfully
+        '400':
+          description: Invalid service identifier
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '404':
+          description: Service not found
+        '500':
+          description: Internal server error

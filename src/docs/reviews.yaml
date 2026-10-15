@@ -1,0 +1,59 @@
+
+paths:
+  /api/v1/reviews:
+    post:
+      tags:
+        - Reviews
+      summary: Submit a review for a completed appointment
+      operationId: createReview
+      description: An owner can submit one review per completed appointment.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - appointmentId
+                - rating
+              properties:
+                appointmentId:
+                  type: integer
+                  example: 3
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 5
+                comment:
+                  type: string
+                  example: Excellent veterinary care
+                petComfortLevel:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 4
+                tagIds:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 1
+                    - 2
+      responses:
+        '201':
+          description: Review created successfully
+        '400':
+          description: Invalid review information
+        '401':
+          description: Authentication required
+        '403':
+          description: Access denied
+        '404':
+          description: Appointment or review tag not found
+        '409':
+          description: Review already exists or appointment is not completed
+        '500':
+          description: Internal server error

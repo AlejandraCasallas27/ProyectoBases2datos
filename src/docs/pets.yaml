@@ -1,0 +1,121 @@
+paths:
+  /api/v1/pets:
+    post:
+      tags:
+      - Pets
+      summary: Register a pet
+      operationId: createPet
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - species
+              properties:
+                name:
+                  type: string
+                  example: Max
+                species:
+                  type: string
+                  example: Dog
+                breed:
+                  type: string
+                  nullable: true
+                  example: Labrador
+                birthDate:
+                  type: string
+                  format: date
+                  nullable: true
+                  example: 2022-05-15
+      responses:
+        '201':
+          description: Pet registered successfully
+        '400':
+          description: Invalid pet data
+        '401':
+          description: Authentication required
+        '403':
+          description: Owner role required
+        '500':
+          description: Internal server error
+    get:
+      tags:
+      - Pets
+      summary: Search registered pets
+      operationId: searchPets
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        example: Max
+      responses:
+        '200':
+          description: Pets retrieved successfully
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '500':
+          description: Internal server error
+  /api/v1/pets/{petId}:
+    put:
+      tags:
+      - Pets
+      summary: Update pet information
+      operationId: updatePet
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: petId
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - petName
+              - species
+              - breed
+              - birthDate
+              properties:
+                petName:
+                  type: string
+                  example: Max
+                species:
+                  type: string
+                  example: Dog
+                breed:
+                  type: string
+                  example: Labrador Retriever
+                birthDate:
+                  type: string
+                  format: date
+                  example: '2022-05-10'
+      responses:
+        '200':
+          description: Pet updated successfully
+        '400':
+          description: Invalid pet information
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '404':
+          description: Pet not found
+        '500':
+          description: Internal server error

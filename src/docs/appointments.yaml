@@ -1,0 +1,164 @@
+
+paths:
+  /api/v1/appointments:
+    post:
+      tags:
+        - Appointments
+      summary: Schedule a veterinary appointment
+      operationId: createAppointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - petId
+                - serviceId
+                - scheduledAt
+              properties:
+                petId:
+                  type: integer
+                  example: 1
+                serviceId:
+                  type: integer
+                  example: 2
+                scheduledAt:
+                  type: string
+                  format: date-time
+                  example: '2026-11-20T10:00:00-05:00'
+      responses:
+        '201':
+          description: Appointment scheduled successfully
+        '400':
+          description: Invalid appointment information
+        '401':
+          description: Authentication required
+        '403':
+          description: Access denied
+        '404':
+          description: Pet or service not found
+        '409':
+          description: Scheduling conflict
+        '500':
+          description: Internal server error
+
+  /api/v1/appointments/pets/{petId}/upcoming:
+    get:
+      tags:
+        - Appointments
+      summary: Get upcoming appointments for a pet
+      operationId: getUpcomingAppointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Upcoming appointments retrieved successfully
+        '400':
+          description: Invalid pet identifier
+        '401':
+          description: Authentication required
+        '403':
+          description: Access denied
+        '404':
+          description: Pet not found
+        '500':
+          description: Internal server error
+
+  /api/v1/appointments/pets/{petId}/history:
+    get:
+      tags:
+        - Appointments
+      summary: Get appointment history for a pet
+      operationId: getAppointmentHistory
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Appointment history retrieved successfully
+        '400':
+          description: Invalid pet identifier
+        '401':
+          description: Authentication required
+        '403':
+          description: Access denied
+        '404':
+          description: Pet not found
+        '500':
+          description: Internal server error
+
+  /api/v1/appointments/{appointmentId}/completion:
+    patch:
+      tags:
+        - Appointments
+      summary: Mark an appointment as completed
+      operationId: completeAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: appointmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+      responses:
+        '200':
+          description: Appointment completed successfully
+        '400':
+          description: Appointment cannot be completed
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '404':
+          description: Appointment not found
+        '409':
+          description: Appointment status conflict
+        '500':
+          description: Internal server error
+
+  /api/v1/appointments/admin/today:
+    get:
+      tags:
+        - Appointments
+      summary: Get appointments scheduled for a selected day
+      operationId: getDailyAppointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: date
+          in: query
+          required: false
+          description: Date in Colombia local time. Defaults to the current day.
+          schema:
+            type: string
+            format: date
+          example: '2026-11-20'
+      responses:
+        '200':
+          description: Daily appointments retrieved successfully
+        '400':
+          description: Invalid date
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '500':
+          description: Internal server error

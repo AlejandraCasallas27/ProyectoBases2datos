@@ -1,0 +1,112 @@
+
+paths:
+  /api/v1/medical-records:
+    post:
+      tags:
+        - Medical Records
+      summary: Register a veterinary medical record
+      operationId: createMedicalRecord
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - petId
+                - recordType
+                - veterinarianName
+              properties:
+                petId:
+                  type: integer
+                  example: 1
+                recordType:
+                  type: string
+                  enum:
+                    - vaccination
+                    - treatment
+                    - laboratory_test
+                  example: vaccination
+                veterinarianName:
+                  type: string
+                  example: Dr Ana Gomez
+                recordedAt:
+                  type: string
+                  format: date-time
+                  example: '2026-10-01T09:00:00-05:00'
+                notes:
+                  type: string
+                  example: Routine preventive care
+                vaccineName:
+                  type: string
+                  example: Rabies
+                applicationDate:
+                  type: string
+                  format: date
+                  example: '2026-10-01'
+                nextDoseDate:
+                  type: string
+                  format: date
+                  example: '2027-10-01'
+                medicationName:
+                  type: string
+                dosage:
+                  type: string
+                frequency:
+                  type: string
+                durationDays:
+                  type: integer
+                testName:
+                  type: string
+                resultValue:
+                  type: number
+                referenceMin:
+                  type: number
+                referenceMax:
+                  type: number
+                unit:
+                  type: string
+      responses:
+        '201':
+          description: Medical record created successfully
+        '400':
+          description: Invalid medical record information
+        '401':
+          description: Authentication required
+        '403':
+          description: Administrator permissions required
+        '404':
+          description: Pet not found
+        '500':
+          description: Internal server error
+
+  /api/v1/medical-records/pets/{petId}:
+    get:
+      tags:
+        - Medical Records
+      summary: Get medical history for a pet
+      operationId: getPetMedicalRecords
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Medical records retrieved successfully
+        '400':
+          description: Invalid pet identifier
+        '401':
+          description: Authentication required
+        '403':
+          description: Access denied
+        '404':
+          description: Pet not found
+        '500':
+          description: Internal server error
